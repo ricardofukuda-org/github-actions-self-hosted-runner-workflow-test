@@ -10,4 +10,5 @@ jobs:
     - run: echo "🎉 This job uses runner scale set runners!"
     #- run: docker build . --file Dockerfile --tag hello:latest
     - run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
+    - run: ls -lah
     - run: docker buildx build --builder=remote -t test --load .
