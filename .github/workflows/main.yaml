@@ -8,6 +8,7 @@ jobs:
     runs-on: github-arc-runner-set
     steps:
     - run: echo "🎉 This job uses runner scale set runners!"
+    - uses: actions/checkout@v4
     #- run: docker build . --file Dockerfile --tag hello:latest
     - run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
     - run: ls -lah
