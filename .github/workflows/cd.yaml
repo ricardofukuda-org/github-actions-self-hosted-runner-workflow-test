@@ -1,0 +1,50 @@
+name: CD pipeline
+permissions:
+  id-token: write
+  contents: read
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - homolog
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: github-arc-runner-set
+    env:
+      DOCKER_IMAGE: "${{ vars.APPLICATION }}:${{ github.sha }}" # Use Git SHA as image tag
+    steps:
+    - name: Checkout sourcecode
+      uses: actions/checkout@v4
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::127923327338:role/github-actions-runner-role
+        aws-region: us-east-1
+        audience: sts.amazonaws.com
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+    - name: Setup buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Docker build/push
+      uses: docker/build-push-action@v5
+      env:
+        DOCKER_IMAGE: "${{ steps.login-ecr.outputs.registry }}/${{ env.DOCKER_IMAGE }}"
+      with:
+        context: .
+        push: true
+        tags: ${{ env.DOCKER_IMAGE }}
+    - name: aws eks auth
+      uses: docker://amazon/aws-cli:2.30.6
+      with:
+        entrypoint: aws
+        args: eks update-kubeconfig --region us-east-1 --name eks-infra --kubeconfig /github/workspace/kubeconfig
+    - name: Helm chart install
+      uses: ./.github/actions/kubectl-helm
+      with:
+        run: helm upgrade --install ${{ vars.APPLICATION }} --namespace production --set tag=${{ github.sha }} --set image=${{ vars.APPLICATION }} --set repository=${{ steps.login-ecr.outputs.registry }} helm-chart/app/
+    #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
+    #- run: docker buildx build --builder=remote -t hello:latest .
+    #- run: docker buildx build --builder=remote -t test --load .
