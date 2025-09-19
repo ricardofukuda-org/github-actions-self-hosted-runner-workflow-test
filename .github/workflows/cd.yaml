@@ -11,7 +11,7 @@ jobs:
     runs-on: github-arc-runner-set
     env:
       APPLICATION: "app"
-      DOCKER_TAG: "${{ github.sha }}" # Use Git SHA as image tag
+      DOCKER_IMAGE: "${{ env.APPLICATION }}:${{ github.sha }}" # Use Git SHA as image tag
     steps:
     - name: Checkout sourcecode
       uses: actions/checkout@v4
@@ -22,12 +22,10 @@ jobs:
       uses: docker/setup-buildx-action@v3
     - name: Docker build/push
       uses: docker/build-push-action@v5
-      env:
-        DOCKER_IMAGE: "${{ steps.login-ecr.outputs.registry }}/${{ env.APPLICATION }}:${{ env.DOCKER_TAG }}"
       with:
         context: .
         push: true
-        tags: ${{ env.DOCKER_IMAGE }}
+        tags: "${{ steps.login-ecr.outputs.registry }}/${{ env.DOCKER_IMAGE }}"
     #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
     #- run: docker buildx build --builder=remote -t hello:latest .
     #- run: docker buildx build --builder=remote -t test --load .
