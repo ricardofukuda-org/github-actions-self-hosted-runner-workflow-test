@@ -1,10 +1,13 @@
 name: App CI pipeline
 on:
-  push:
+#  push:
+#    branches:
+#      - master
+  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened]
     branches:
       - master
-  workflow_dispatch:
-
 jobs:
   build:
     # You need to use the INSTALLATION_NAME from the previous step
