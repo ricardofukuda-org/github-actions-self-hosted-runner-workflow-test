@@ -3,7 +3,8 @@ on:
   push:
     branches:
       - master
-
+  workflow_dispatch:
+  
 jobs:
   build:
     # You need to use the INSTALLATION_NAME from the previous step
@@ -14,7 +15,7 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4 # More information on this action can be found below in the 'AWS Credentials' section
       with:
-        role-to-assume: arn:aws:iam::127923327338:role/github-actions-runner-job-role
+        role-to-assume: arn:aws:iam::127923327338:role/github-actions-runner-role
         aws-region: aws-region-1
     - name: Login to Amazon ECR
       id: login-ecr
