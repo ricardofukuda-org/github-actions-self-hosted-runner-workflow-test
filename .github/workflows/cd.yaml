@@ -15,7 +15,7 @@ jobs:
     - name: Checkout sourcecode
       uses: actions/checkout@v4
     - name: Build image
-      run: docker build -t ${{ env.DOCKER_REPOSITORY}}:${{ env.DOCKER_TAG }} .
+      run: docker build -t ${{ env.DOCKER_IMAGE }} .
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
