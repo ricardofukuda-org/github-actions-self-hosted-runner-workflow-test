@@ -5,6 +5,8 @@ on:
       - master
   workflow_dispatch:
 
+input:
+
 jobs:
   build:
     # You need to use the INSTALLATION_NAME from the previous step
@@ -12,11 +14,6 @@ jobs:
     steps:
     - name: Checkout sourcecode
       uses: actions/checkout@v4
-#    - name: Configure AWS credentials
-#      uses: aws-actions/configure-aws-credentials@v4 # More information on this action can be found below in the 'AWS Credentials' section
-#      with:
-#        role-to-assume: arn:aws:iam::127923327338:role/github-actions-runner-role
-#        aws-region: us-east-1
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
