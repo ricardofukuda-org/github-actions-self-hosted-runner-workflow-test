@@ -1,0 +1,21 @@
+name: App CI pipeline
+push:
+  branches:
+    - main
+
+jobs:
+  build:
+    # You need to use the INSTALLATION_NAME from the previous step
+    runs-on: github-arc-runner-set
+    steps:
+    - name: Checkout sourcecode
+      uses: actions/checkout@v4
+    - name: Config AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::123456789:role/github-actions
+        aws-region: us-east-1
+        audience: sts.amazonaws.com
+    #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
+    #- run: docker buildx build --builder=remote -t hello:latest .
+    #- run: docker buildx build --builder=remote -t test --load .

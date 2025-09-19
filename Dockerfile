@@ -1,4 +1,3 @@
-FROM ubuntu:latest
+FROM node:24
 
-RUN apt update
 RUN echo "hello"
