@@ -8,10 +8,8 @@ jobs:
     runs-on: github-arc-runner-set
     steps:
     - run: echo "🎉 This job uses runner scale set runners!"
-    - run: curl -o containerd.tar.gz https://github.com/containerd/containerd/releases/download/v2.1.4/containerd-2.1.4-linux-amd64.tar.gz
-    - run: tar Cxzvf ./local/ containerd.tar.gz
-    - run: curl -o runc.amd64 https://github.com/opencontainers/runc/releases/download/v1.3.1/runc.amd64
-    - run: install -m 755 runc.amd64 ./runc
+    - name: Set up containerd
+      uses: crazy-max/ghaction-setup-containerd@v3
     - uses: actions/checkout@v4
     #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
     #- run: docker buildx build --builder=remote -t hello:latest .
