@@ -8,8 +8,6 @@ jobs:
     runs-on: github-arc-runner-set
     steps:
     - run: echo "🎉 This job uses runner scale set runners!"
-    - name: Set up containerd
-      uses: crazy-max/ghaction-setup-containerd@v3
     - uses: actions/checkout@v4
     #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
     #- run: docker buildx build --builder=remote -t hello:latest .
