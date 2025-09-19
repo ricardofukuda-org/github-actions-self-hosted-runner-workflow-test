@@ -14,13 +14,13 @@ jobs:
   run-tests:
     runs-on: github-arc-runner-set
     env:
-      DOCKER_REPOSITORY: "app"
+      APPLICATION: "app"
       DOCKER_TAG: "${{ github.sha }}" # Use Git SHA as image tag
     steps:
     - name: Checkout sourcecode
       uses: actions/checkout@v4
     - name: Build image
-      run: docker build -t ${{ env.DOCKER_REPOSITORY}}:${{ env.DOCKER_TAG }} .
+      run: docker build -t ${{ env.APPLICATION }}:${{ env.DOCKER_TAG }} .
     - name: Run tests
-      run: docker run --rm ${{ env.DOCKER_REPOSITORY}}:${{ env.DOCKER_TAG }} npm test
+      run: docker run --rm ${{ env.APPLICATION }}:${{ env.DOCKER_TAG }} npm test
       shell: bash
