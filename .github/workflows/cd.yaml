@@ -25,6 +25,15 @@ jobs:
       run: |
         docker tag ${{ env.DOCKER_IMAGE }} ${{ env.ECR_REGISTRY}}/${{ env.DOCKER_IMAGE }}
         docker push ${{ env.ECR_REGISTRY}}/${{ env.DOCKER_IMAGE }}
+    - name: Config kubeconfig
+      run: aws eks update-kubeconfig --region us-east-1 --name eks-infra --kubeconfig ./kubeconfig
+    - name: Helm install
+      uses: ./.github/actions/kubectl-helm
+      with:
+        run: |
+          kubectl create namespace production
+          helm upgrade --install ${{ vars.APPLICATION }} --namespace production --set tag=${{ github.sha }} helm-chart/${{ vars.APPLICATION }}/
+
     #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
     #- run: docker buildx build --builder=remote -t hello:latest .
     #- run: docker buildx build --builder=remote -t test --load .
