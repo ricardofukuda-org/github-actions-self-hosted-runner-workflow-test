@@ -11,12 +11,22 @@ jobs:
     steps:
     - name: Checkout sourcecode
       uses: actions/checkout@v4
-    - name: Config AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4 # More information on this action can be found below in the 'AWS Credentials' section
       with:
-        role-to-assume: arn:aws:iam::123456789:role/github-actions
-        aws-region: us-east-1
-        audience: sts.amazonaws.com
+        role-to-assume: arn:aws:iam::127923327338:role/github-actions-runner-job-role
+        aws-region: aws-region-1
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+    - name: Build and push Docker image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: my-app-repo # Replace with your ECR repository name
+        IMAGE_TAG: ${{ github.sha }} # Use Git SHA as image tag
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
     #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
     #- run: docker buildx build --builder=remote -t hello:latest .
     #- run: docker buildx build --builder=remote -t test --load .
