@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: github-arc-runner-set
     env:
-      DOCKER_IMAGE: "${{ var.APPLICATION }}:${{ github.sha }}" # Use Git SHA as image tag
+      DOCKER_IMAGE: "${{ vars.APPLICATION }}:${{ github.sha }}" # Use Git SHA as image tag
     steps:
     - name: Checkout sourcecode
       uses: actions/checkout@v4
