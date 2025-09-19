@@ -14,8 +14,7 @@ jobs:
   run-tests:
     runs-on: github-arc-runner-set
     env:
-      APPLICATION: "app"
-      DOCKER_IMAGE: "${{ env.APPLICATION }}:${{ github.sha }}"
+      DOCKER_IMAGE: "${{ var.APPLICATION }}:${{ github.sha }}"
     steps:
     - name: Checkout sourcecode
       uses: actions/checkout@v4
