@@ -1,0 +1,29 @@
+name: CD pipeline
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: github-arc-runner-set
+    env:
+      DOCKER_REPOSITORY: "app"
+      DOCKER_TAG: "${{ github.sha }}" # Use Git SHA as image tag
+    steps:
+    - name: Checkout sourcecode
+      uses: actions/checkout@v4
+    - name: Build image
+      run: docker build -t ${{ env.DOCKER_REPOSITORY}}:${{ env.DOCKER_TAG }} .
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+    - name: Tag and push image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      run: |
+        docker tag ${{ env.DOCKER_REPOSITORY}}:${{ env.DOCKER_TAG }} $ECR_REGISTRY/${{ env.DOCKER_REPOSITORY}}:${{ env.DOCKER_TAG }}
+        docker push $ECR_REGISTRY/${{ env.DOCKER_REPOSITORY}}:${{ env.DOCKER_TAG }}
+    #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
+    #- run: docker buildx build --builder=remote -t hello:latest .
+    #- run: docker buildx build --builder=remote -t test --load .
