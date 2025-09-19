@@ -1,4 +1,7 @@
 name: CD pipeline
+permissions:
+  id-token: write
+  contents: read
 on:
   push:
     branches:
@@ -16,6 +19,12 @@ jobs:
       uses: actions/checkout@v4
     - name: Build image
       run: docker build -t ${{ env.DOCKER_IMAGE }} .
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::127923327338:role/github-actions-runner-role
+        aws-region: us-east-1
+        audience: sts.amazonaws.com
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
