@@ -16,4 +16,5 @@ RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 700 /entrypoint.sh
+ENV AWS_WEB_IDENTITY_TOKEN_FILE=/var/run/secrets/eks.amazonaws.com/serviceaccount/token
 ENTRYPOINT ['/entrypoint.sh']
