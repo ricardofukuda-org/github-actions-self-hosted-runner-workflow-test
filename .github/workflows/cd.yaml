@@ -1,7 +1,7 @@
 name: CD pipeline
-#permissions:
-#  id-token: write
-#  contents: read
+permissions:
+  id-token: write
+  contents: read
 on:
   push:
     branches:
@@ -17,16 +17,16 @@ jobs:
     steps:
     - name: Checkout sourcecode
       uses: actions/checkout@v4
-#    - name: Configure AWS credentials
-#      uses: aws-actions/configure-aws-credentials@v4
-#      with:
-#        role-to-assume: arn:aws:iam::127923327338:role/github-actions-runner-role
-#        aws-region: us-east-1
-#        audience: sts.amazonaws.com
-    - name: Configure AWS Credentials
+    - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
+        role-to-assume: arn:aws:iam::127923327338:role/github-actions-runner-role
         aws-region: us-east-1
+        audience: sts.amazonaws.com
+#    - name: Configure AWS Credentials
+#      uses: aws-actions/configure-aws-credentials@v4
+#      with:
+#        aws-region: us-east-1
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
