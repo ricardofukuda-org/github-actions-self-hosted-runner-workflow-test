@@ -16,9 +16,5 @@ RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 700 /entrypoint.sh
-ENV AWS_WEB_IDENTITY_TOKEN_FILE=/var/run/secrets/eks.amazonaws.com/serviceaccount/token
-ENV AWS_DEFAULT_REGION=us-east-1
-ENV AWS_REGION=us-east-1
-ENV AWS_ROLE_ARN=arn:aws:iam::127923327338:role/github-actions-runner-role
-ENV AWS_STS_REGIONAL_ENDPOINTS=regional
+
 ENTRYPOINT ['/entrypoint.sh']
