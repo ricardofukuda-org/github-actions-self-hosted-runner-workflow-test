@@ -1,5 +1,4 @@
 #!/bin/bash
-#export KUBECONFIG='/github/workspace/kubeconfig'
-export KUBECONFIG='/github/home/.kube/config'
-
+export KUBECONFIG='/github/workspace/kubeconfig'
+cat /github/workspace/kubeconfig
 exec sh -c "$INPUT_RUN"
