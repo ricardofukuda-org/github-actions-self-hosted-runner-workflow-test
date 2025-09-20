@@ -30,21 +30,21 @@ jobs:
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
-    - name: Build image
-      run: docker build -t ${{ env.DOCKER_IMAGE }} .
-    - name: Tag and push image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      run: |
-        docker tag ${{ env.DOCKER_IMAGE }} ${{ env.ECR_REGISTRY}}/${{ env.DOCKER_IMAGE }}
-        docker push ${{ env.ECR_REGISTRY}}/${{ env.DOCKER_IMAGE }}
+#    - name: Build image
+#      run: docker build -t ${{ env.DOCKER_IMAGE }} .
+#    - name: Tag and push image
+#      env:
+#        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#      run: |
+#        docker tag ${{ env.DOCKER_IMAGE }} ${{ env.ECR_REGISTRY}}/${{ env.DOCKER_IMAGE }}
+#        docker push ${{ env.ECR_REGISTRY}}/${{ env.DOCKER_IMAGE }}
     - name: Helm install
       uses: ./.github/actions/kubectl-helm
       with:
         run: |
           aws eks update-kubeconfig --region us-east-1 --name eks-infra --kubeconfig /github/workspace/kubeconfig
-          #kubectl create namespace production
-          helm upgrade --install ${{ vars.APPLICATION }} --namespace production --set tag=${{ github.sha }} helm-chart/app/
+          kubectl create namespace production
+          #helm upgrade --install ${{ vars.APPLICATION }} --namespace production --set tag=${{ github.sha }} helm-chart/app/
 
     #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
     #- run: docker buildx build --builder=remote -t hello:latest .
