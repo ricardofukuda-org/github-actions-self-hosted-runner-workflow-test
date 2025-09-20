@@ -44,16 +44,16 @@ jobs:
         context: .
         push: true
         tags: ${{ env.DOCKER_IMAGE }}
-#    - name: aws cli
-#      uses: docker://amazon/aws-cli:2.30.6
-#      with:
-#        entrypoint: aws
-#        args: sts get-caller-identity
+    - name: aws cli
+      uses: docker://amazon/aws-cli:2.30.6
+      with:
+        entrypoint: aws
+        args: eks update-kubeconfig --region us-east-1 --name eks-infra --kubeconfig /github/workspace/kubeconfig
     - name: Helm install
       uses: ./.github/actions/kubectl-helm
       with:
         run: |
-          aws eks update-kubeconfig --region us-east-1 --name eks-infra --kubeconfig /github/workspace/kubeconfig
+          ##aws eks update-kubeconfig --region us-east-1 --name eks-infra --kubeconfig /github/workspace/kubeconfig
           helm upgrade --install ${{ vars.APPLICATION }} --namespace production --set tag=${{ github.sha }} helm-chart/app/
     #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
     #- run: docker buildx build --builder=remote -t hello:latest .
