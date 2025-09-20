@@ -2,10 +2,10 @@ FROM ubuntu:22.04
 
 WORKDIR /
 RUN apt update
-RUN apt install -y curl
-#RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#RUN unzip -q awscliv2.zip
-#RUN ./aws/install
+RUN apt install -y curl zip
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN unzip -q awscliv2.zip
+RUN ./aws/install
 
 RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 RUN chmod 700 get_helm.sh
