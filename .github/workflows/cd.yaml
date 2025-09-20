@@ -17,8 +17,6 @@ jobs:
     steps:
     - name: Checkout sourcecode
       uses: actions/checkout@v4
-    - name: Build image
-      run: docker build -t ${{ env.DOCKER_IMAGE }} .
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -28,6 +26,8 @@ jobs:
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
+    - name: Build image
+      run: docker build -t ${{ env.DOCKER_IMAGE }} .
     - name: Tag and push image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
