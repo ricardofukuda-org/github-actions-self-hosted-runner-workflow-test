@@ -42,7 +42,8 @@ jobs:
       uses: ./.github/actions/kubectl-helm
       with:
         run: |
-          aws eks update-kubeconfig --region us-east-1 --name eks-infra --kubeconfig /github/workspace/kubeconfig
+          #aws eks update-kubeconfig --region us-east-1 --name eks-infra --kubeconfig /github/workspace/kubeconfig
+          aws eks update-kubeconfig --region us-east-1 --name eks-infra
           kubectl create namespace production
           #helm upgrade --install ${{ vars.APPLICATION }} --namespace production --set tag=${{ github.sha }} helm-chart/app/
 
