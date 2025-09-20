@@ -10,6 +10,4 @@ livenessProbe:
 readinessProbe:
   path: /
   port: 80
-command:
-  - npm
-  - start
+command: ["npm","start"]
