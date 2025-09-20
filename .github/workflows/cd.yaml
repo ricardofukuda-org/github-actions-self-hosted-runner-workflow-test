@@ -40,7 +40,8 @@ jobs:
 #        docker push ${{ env.ECR_REGISTRY}}/${{ env.DOCKER_IMAGE }}
     - name: aws cli
       uses: docker://amazon/aws-cli:2.30.6
-      with: aws sts get-caller-identity
+      with:
+        args: aws sts get-caller-identity
     - name: Helm install
       uses: ./.github/actions/kubectl-helm
       with:
