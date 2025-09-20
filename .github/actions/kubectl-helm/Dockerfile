@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 WORKDIR /
 RUN apt update
-#RUN apt install -y curl zip
+RUN apt install -y curl
 #RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 #RUN unzip -q awscliv2.zip
 #RUN ./aws/install
