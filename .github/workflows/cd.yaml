@@ -23,10 +23,6 @@ jobs:
         role-to-assume: arn:aws:iam::127923327338:role/github-actions-runner-role
         aws-region: us-east-1
         audience: sts.amazonaws.com
-#    - name: Configure AWS Credentials
-#      uses: aws-actions/configure-aws-credentials@v4
-#      with:
-#        aws-region: us-east-1
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
@@ -38,18 +34,27 @@ jobs:
 #      run: |
 #        docker tag ${{ env.DOCKER_IMAGE }} ${{ env.ECR_REGISTRY}}/${{ env.DOCKER_IMAGE }}
 #        docker push ${{ env.ECR_REGISTRY}}/${{ env.DOCKER_IMAGE }}
-    - name: aws cli
-      uses: docker://amazon/aws-cli:2.30.6
+    - name: Setup buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Docker build/push
+      uses: docker/build-push-action@v5
+      env:
+        DOCKER_IMAGE: "${{ steps.login-ecr.outputs.registry }}/${{ env.DOCKER_IMAGE }}"
       with:
-        entrypoint: aws
-        args: sts get-caller-identity
+        context: .
+        push: true
+        tags: ${{ env.DOCKER_IMAGE }}
+#    - name: aws cli
+#      uses: docker://amazon/aws-cli:2.30.6
+#      with:
+#        entrypoint: aws
+#        args: sts get-caller-identity
     - name: Helm install
       uses: ./.github/actions/kubectl-helm
       with:
         run: |
           aws eks update-kubeconfig --region us-east-1 --name eks-infra --kubeconfig /github/workspace/kubeconfig
           helm upgrade --install ${{ vars.APPLICATION }} --namespace production --set tag=${{ github.sha }} helm-chart/app/
-
     #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
     #- run: docker buildx build --builder=remote -t hello:latest .
     #- run: docker buildx build --builder=remote -t test --load .
