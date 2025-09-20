@@ -41,7 +41,7 @@ jobs:
     - name: aws cli
       uses: docker://amazon/aws-cli:2.30.6
       with:
-        run: aws s3 ls
+        run: aws sts get-caller-identity
     - name: Helm install
       uses: ./.github/actions/kubectl-helm
       with:
