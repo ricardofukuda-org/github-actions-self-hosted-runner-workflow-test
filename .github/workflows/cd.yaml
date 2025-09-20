@@ -44,7 +44,7 @@ jobs:
     - name: Helm chart install
       uses: ./.github/actions/kubectl-helm
       with:
-        run: helm upgrade --install ${{ vars.APPLICATION }} --namespace production --set tag=${{ github.sha }} --set repository=${{ steps.login-ecr.outputs.registry }} helm-chart/app/
+        run: helm upgrade --install ${{ vars.APPLICATION }} --namespace production --set tag=${{ github.sha }} --set image=${{ vars.APPLICATION }} --set repository=${{ steps.login-ecr.outputs.registry }} helm-chart/app/
     #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
     #- run: docker buildx build --builder=remote -t hello:latest .
     #- run: docker buildx build --builder=remote -t test --load .
