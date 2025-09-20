@@ -17,8 +17,7 @@ spec:
       containers:
         - name: backend
           image: {{ .Values.repository }}/{{ .Values.image }}:{{ .Values.tag }}
-          command:
-          {{- range .Values.command }} - {{ . | indent 12 }} {{- end }}
+          command:  {{ .Values.command | toYaml | nindent 12 }}
           ports:
             - name: http
               containerPort: {{ .Values.containerPorts.http }}
