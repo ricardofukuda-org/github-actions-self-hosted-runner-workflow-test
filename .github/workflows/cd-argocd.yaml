@@ -42,3 +42,8 @@ jobs:
       with:
         repository: ricardofukuda-org/argocd-application-test # Specify the other repo (owner/repo format)
         path: argocd-application-test # Clones to $GITHUB_WORKSPACE/other-repo
+    - name: setup git config
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+    - run: touch argocd-application-test/aaa.txt && git add argocd-application-test/ && git commit -m "aaaa" && git push
