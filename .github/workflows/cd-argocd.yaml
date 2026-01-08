@@ -16,7 +16,7 @@ jobs:
     env:
       DOCKER_IMAGE: "${{ vars.APPLICATION }}:${{ github.sha }}" # Use Git SHA as image tag
     steps:
-    - run: sudo apt install net-tools -y && ip a
+    - run: sudo apt update && sudo apt install iproute2 -y && ip a
     - name: Checkout sourcecode
       uses: actions/checkout@v4
     - name: Configure AWS credentials
