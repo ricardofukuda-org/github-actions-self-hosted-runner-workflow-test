@@ -1,14 +1,14 @@
-# About: This CD pipeline deploys the helm chart directly into the private EKS (kubernetes) cluster.
-name: CD pipeline
+# About: This CD pipeline deploys the helm chart into the private EKS (kubernetes) cluster using the gitops approach through argocd.
+name: CD pipeline - argocd
 permissions:
   id-token: write
   contents: read
 on:
-#  push:
-#    branches:
-#      - master
-#      - develop
-#      - homolog
+  push:
+    branches:
+      - master
+      - develop
+      - homolog
   workflow_dispatch:
 jobs:
   deploy:
@@ -37,15 +37,8 @@ jobs:
         context: .
         push: true
         tags: ${{ env.DOCKER_IMAGE }}
-    - name: aws eks auth
-      uses: docker://amazon/aws-cli:2.30.6
+    - name: Checkout applications repository
+      uses: actions/checkout@v4
       with:
-        entrypoint: aws
-        args: eks update-kubeconfig --region us-east-1 --name eks-infra --kubeconfig /github/workspace/kubeconfig
-    - name: Helm chart install
-      uses: ./.github/actions/kubectl-helm
-      with:
-        run: helm upgrade --install ${{ vars.APPLICATION }} --namespace production --set tag=${{ github.sha }} --set image=${{ vars.APPLICATION }} --set repository=${{ steps.login-ecr.outputs.registry }} helm-chart/app/
-    #- run: docker buildx create --name remote --driver remote tcp://buildkitd.buildkitd:1234
-    #- run: docker buildx build --builder=remote -t hello:latest .
-    #- run: docker buildx build --builder=remote -t test --load .
+        repository: ricardofukuda-org/argocd-application-test # Specify the other repo (owner/repo format)
+        path: argocd-application-test # Clones to $GITHUB_WORKSPACE/other-repo
