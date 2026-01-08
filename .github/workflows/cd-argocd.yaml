@@ -48,6 +48,10 @@ jobs:
         path: argocd-application-test # Clones to $GITHUB_WORKSPACE/other-repo
     - name: setup git config
       run: |
+        cd argocd-application-test/
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
-    - run: touch argocd-application-test/aaa.txt && cd argocd-application-test/ && git add . && git commit -m "aaaa" && git push
+        touch aaa.txt
+        git add .
+        git commit -m "aaaa"
+        git push
