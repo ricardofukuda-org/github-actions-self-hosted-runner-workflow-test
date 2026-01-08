@@ -46,6 +46,7 @@ jobs:
         repository: ricardofukuda-org/argocd-application-test # Specify the other repo (owner/repo format)
         ref: main
         path: argocd-application-test # Clones to $GITHUB_WORKSPACE/other-repo
+        token: ${{ vars.PAT }}
     - name: setup git config
       run: |
         cd argocd-application-test/
