@@ -43,7 +43,7 @@ jobs:
     - name: Checkout applications repository
       uses: actions/checkout@v4
       with:
-        repository: https://github.com/ricardofukuda-org/argocd-application-test # Specify the other repo (owner/repo format)
+        repository: ricardofukuda-org/argocd-application-test # Specify the other repo (owner/repo format)
         ref: main
         path: argocd-application-test # Clones to $GITHUB_WORKSPACE/other-repo
     - name: setup git config
