@@ -43,7 +43,7 @@ jobs:
     - name: Docker build/push
       uses: docker/build-push-action@v5
       env:
-        DOCKER_IMAGE: "${{ steps.login-ecr.outputs.registry }}/${{ env.DOCKER_IMAGE }}"
+        DOCKER_IMAGE: "${{ steps.login-ecr.outputs.registry }}/${{ env.DOCKER_TAG }}"
       with:
         context: .
         push: true
