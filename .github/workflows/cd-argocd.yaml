@@ -62,10 +62,15 @@ jobs:
         token: ${{ secrets.GHA_RUNNER_POC_CICD_PAT }}
     - name: setup git config
       run: |
+        APPLICATION_PATH=applications/overlays/${{ env.ENVIRONMENT }}/${{ vars.APPLICATION }}
+        cp helm-chart/values.yaml $APPLICATION_PATH/values.yaml
+        cp helm-chart/values-${{ env.ENVIRONMENT }}.yaml $APPLICATION_PATH/values-${{ env.ENVIRONMENT }}.yaml
+
         cd argocd-application-test/
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
-        sed -i 's/\(tag: [^\n]\+\)/tag: ${{ env.DOCKER_TAG }} # branch: ${{ env.BRANCH_NAME }} sha:${{ github.sha }}/g' applications/overlays/${{ env.ENVIRONMENT }}/${{ vars.APPLICATION }}/values-${{ env.ENVIRONMENT }}.yaml
-        git add applications/overlays/${{ env.ENVIRONMENT }}/${{ vars.APPLICATION }}/
+
+        sed -i 's/\(tag: [^\n]\+\)/tag: ${{ env.DOCKER_TAG }} # branch: ${{ env.BRANCH_NAME }} commit: ${{ github.sha }}/g' $APPLICATION_PATH/values-${{ env.ENVIRONMENT }}.yaml
+        git add $APPLICATION_PATH/
         git commit -m "${{ vars.APPLICATION }}/${{ env.DOCKER_TAG }} deploy"
         git push
