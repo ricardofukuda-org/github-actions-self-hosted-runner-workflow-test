@@ -3,7 +3,7 @@
 Contains simple test application to deploy on kubernetes using ArgoCD through GitHub Actions.
 
 ## CI Flow:
-When a new merge pull request has been request created, the GH actions "CI pipeline" is executed to build the docker image and run the unit tests. If the tests complete successfully, then the pull request merge is allowed after additional peer approve.
+When a new merge pull request has been created, the GH actions "CI pipeline" is executed to build the docker image and run the unit tests. If the tests complete successfully, then the pull request merge is allowed after additional peer approve.
 
 ## CD Flow:
 1 - User merges a pull request, then the user start the GH actions "CD pipeline" after selecting the target deployment enviroment (qa, prod, etc);
