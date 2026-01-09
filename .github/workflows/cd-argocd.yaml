@@ -46,13 +46,13 @@ jobs:
         repository: ricardofukuda-org/argocd-application-test # Specify the other repo (owner/repo format)
         ref: main
         path: argocd-application-test # Clones to $GITHUB_WORKSPACE/other-repo
-        token: ${{ secrets.PAT }}
+        token: ${{ secrets.GHA_RUNNER_POC_CICD_PAT }}
     - name: setup git config
       run: |
         cd argocd-application-test/
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
-        sed -i 's/\(tag: [^\n]\+\)/tag: ${{ github.sha }}/g' applications/overlays/qa/website/values-qa.yaml
-        git add applications/overlays/qa/website/
+        sed -i 's/\(tag: [^\n]\+\)/tag: ${{ github.sha }}/g' applications/overlays/${{ vars.ENVIRONMENT }}/website/values-${{ vars.ENVIRONMENT }}.yaml
+        git add applications/overlays/${{ vars.ENVIRONMENT }}/website/
         git commit -m "deploy"
         git push
