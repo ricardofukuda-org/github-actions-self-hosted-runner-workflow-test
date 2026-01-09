@@ -60,16 +60,17 @@ jobs:
         ref: main
         path: ${{ env.ARGOCD_APPLICATIONS_REPO }} # Clones to $GITHUB_WORKSPACE/other-repo
         token: ${{ secrets.GHA_RUNNER_POC_CICD_PAT }}
-    - name: setup git config
+    - name: Update ArgoCD application
+      env:
+        ARGOCD_APPLICATION_VALUES_PATH: "applications/overlays/${{ env.ENVIRONMENT }}/${{ vars.APPLICATION }}"
       run: |
-        ARGOCD_APPLICATION_VALUES_PATH=applications/overlays/${{ env.ENVIRONMENT }}/${{ vars.APPLICATION }}
-        cp helm-chart/values.yaml helm-chart/values-${{ env.ENVIRONMENT }}.yaml ${{ env.ARGOCD_APPLICATIONS_REPO }}/$ARGOCD_APPLICATION_VALUES_PATH/
+        cp helm-chart/values.yaml helm-chart/values-${{ env.ENVIRONMENT }}.yaml ${{ env.ARGOCD_APPLICATIONS_REPO }}/${{ env.ARGOCD_APPLICATION_VALUES_PATH }}/
 
-        sed -i 's/\(tag: [^\n]\+\)/tag: ${{ env.DOCKER_TAG }} # branch: ${{ env.BRANCH_NAME }} commit: ${{ github.sha }}/g' ${{ env.ARGOCD_APPLICATIONS_REPO }}/$ARGOCD_APPLICATION_VALUES_PATH/values-${{ env.ENVIRONMENT }}.yaml
+        sed -i 's/\(tag: [^\n]\+\)/tag: ${{ env.DOCKER_TAG }} # branch: ${{ env.BRANCH_NAME }} commit: ${{ github.sha }}/g' ${{ env.ARGOCD_APPLICATIONS_REPO }}/${{ env.ARGOCD_APPLICATION_VALUES_PATH }}/values-${{ env.ENVIRONMENT }}.yaml
         
         cd ${{ env.ARGOCD_APPLICATIONS_REPO }}/
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
-        git add $ARGOCD_APPLICATION_VALUES_PATH/
+        git add ${{ env.ARGOCD_APPLICATION_VALUES_PATH }}/
         git commit -m "${{ vars.APPLICATION }}/${{ env.DOCKER_TAG }} deploy"
         git push
