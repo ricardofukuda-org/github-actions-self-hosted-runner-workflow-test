@@ -20,7 +20,7 @@ jobs:
     steps:
     - name: generate env vars
       run: |
-        BUILD_DATE=$(date -u +"%Y-%m-%dT%H.%M.%SZ")
+        BUILD_DATE=$(date -u +"%Y.%m.%d-%H.%M.%S")
         echo "BUILD_DATE=$BUILD_DATE" >> $GITHUB_ENV
         echo "DOCKER_TAG=$ENVIRONMENT-$BUILD_DATE" >> $GITHUB_ENV
       shell: bash
