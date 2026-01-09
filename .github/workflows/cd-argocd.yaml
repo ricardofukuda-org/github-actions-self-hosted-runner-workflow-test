@@ -22,9 +22,7 @@ jobs:
       run: |
         BUILD_DATE=$(date -u +"%Y-%m-%dT%H.%M.%SZ")
         echo "BUILD_DATE=$BUILD_DATE" >> $GITHUB_ENV
-        echo "DOCKER_TAG=$ENVIRONMENT-$BUILD_DATE" >> $GITHUB_ENV
-      env:
-        ENVIRONMENT: ${{ env.ENVIRONMENT }}
+        echo "DOCKER_TAG=${{ vars.ENVIRONMENT }}-$BUILD_DATE" >> $GITHUB_ENV
       shell: bash
     - name: Checkout sourcecode
       uses: actions/checkout@v4
@@ -62,7 +60,7 @@ jobs:
         cd argocd-application-test/
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
-        sed -i 's/\(tag: [^\n]\+\)/tag: ${{ env.DOCKER_TAG }} # branch: ${{ github.ref_name }} sha:${{ github.sha }}/g' applications/overlays/${{ env.ENVIRONMENT }}/${{ vars.APPLICATION }}/values-${{ env.ENVIRONMENT }}.yaml
-        git add applications/overlays/${{ env.ENVIRONMENT }}/${{ vars.APPLICATION }}/
-        git commit -m "${{ vars.APPLICATION }}/${{ env.DOCKER_TAG }} deploy"
+        sed -i 's/\(tag: [^\n]\+\)/tag: ${{ env.DOCKER_TAG }} # branch: ${{ github.ref_name }} sha:${{ github.sha }}/g' applications/overlays/${{ vars.ENVIRONMENT }}/${{ vars.APPLICATION }}/values-${{ vars.ENVIRONMENT }}.yaml
+        git add applications/overlays/${{ vars.ENVIRONMENT }}/${{ vars.APPLICATION }}/
+        git commit -m "${{ vars.APPLICATION }}/${{ vars.DOCKER_TAG }} deploy"
         git push
