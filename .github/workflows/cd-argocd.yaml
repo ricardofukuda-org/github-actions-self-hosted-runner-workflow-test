@@ -5,9 +5,18 @@ permissions:
   contents: read
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - 'qa'
+          - 'prod'
 jobs:
   deploy:
     runs-on: github-arc-runner-set
+    environment: ${{ github.event.inputs.environment }}
     steps:
     - name: generate env vars
       run: |
