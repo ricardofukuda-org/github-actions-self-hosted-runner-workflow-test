@@ -14,11 +14,11 @@ jobs:
   deploy:
     runs-on: github-arc-runner-set
     steps:
-    - name: set BUILD_DATE
+    - name: generate env vars
       run: |
         BUILD_DATE=$(date -u +"%Y-%m-%dT%H.%M.%SZ")
-        echo 'BUILD_DATE=$BUILD_DATE' >> $GITHUB_ENV
-        echo 'DOCKER_TAG=${{ vars.ENVIRONMENT }}-$BUILD_DATE' >> $GITHUB_ENV
+        echo "BUILD_DATE=$BUILD_DATE" >> $GITHUB_ENV
+        echo "DOCKER_TAG=${{ vars.ENVIRONMENT }}-$BUILD_DATE" >> $GITHUB_ENV
       shell: bash
     - name: Checkout sourcecode
       uses: actions/checkout@v4
