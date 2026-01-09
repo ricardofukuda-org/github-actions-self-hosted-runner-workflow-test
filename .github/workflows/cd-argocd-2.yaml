@@ -16,7 +16,7 @@ on:
 
 jobs:
   deploy:
-    uses: ricardofukuda-org/github-actions-self-hosted-runner-workflow-base/.github/workflows/base-cd-argocd.yaml@main
+    uses: ricardofukuda-org/github-actions-self-hosted-runner-workflow-base/.github/workflows/base-cd-argocd.yaml@master
     with:
       application: ${{ vars.APPLICATION }}
       environment: ${{ github.event.inputs.environment }} 
