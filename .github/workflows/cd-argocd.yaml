@@ -13,9 +13,13 @@ on:
 jobs:
   deploy:
     runs-on: github-arc-runner-set
-    env:
-      DOCKER_IMAGE: "${{ vars.APPLICATION }}:${{ github.sha }}" # Use Git SHA as image tag
     steps:
+    - name: set BUILD_DATE
+      run: |
+        BUILD_DATE=$(date -u +"%Y-%m-%dT%H.%M.%SZ")
+        echo 'BUILD_DATE=$BUILD_DATE' >> $GITHUB_ENV
+        echo 'DOCKER_TAG=${{ vars.ENVIRONMENT }}-$BUILD_DATE' >> $GITHUB_ENV
+      shell: bash
     - name: Checkout sourcecode
       uses: actions/checkout@v4
     - name: Configure AWS credentials
@@ -52,7 +56,7 @@ jobs:
         cd argocd-application-test/
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
-        sed -i 's/\(tag: [^\n]\+\)/tag: ${{ github.sha }}/g' applications/overlays/${{ vars.ENVIRONMENT }}/website/values-${{ vars.ENVIRONMENT }}.yaml
-        git add applications/overlays/${{ vars.ENVIRONMENT }}/website/
-        git commit -m "deploy"
+        sed -i 's/\(tag: [^\n]\+\)/tag: ${{ env.DOCKER_TAG }} # branch: ${{ github.ref_name }} sha:${{ github.sha }}/g' applications/overlays/${{ vars.ENVIRONMENT }}/${{ vars.APPLICATION }}/values-${{ vars.ENVIRONMENT }}.yaml
+        git add applications/overlays/${{ vars.ENVIRONMENT }}/${{ vars.APPLICATION }}/
+        git commit -m "${{ vars.APPLICATION }}/${{ env.DOCKER_TAG }} deploy"
         git push
