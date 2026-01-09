@@ -1,5 +1,5 @@
 # About: This CD pipeline deploys the helm chart directly into the private EKS (kubernetes) cluster.
-name: CD pipeline
+name: CD Pipeline
 permissions:
   id-token: write
   contents: read

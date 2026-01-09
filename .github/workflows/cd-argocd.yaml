@@ -1,5 +1,5 @@
-# About: This CD pipeline deploys the helm chart into the private EKS (kubernetes) cluster using the gitops approach through argocd.
-name: CD pipeline - argocd
+# About: This CD pipeline deploys a helm chart into the private EKS (kubernetes) cluster using the gitops approach through argocd.
+name: CD Pipeline - argocd
 permissions:
   id-token: write
   contents: read
@@ -15,6 +15,7 @@ on:
           - 'prod'
 
 env:
+  APPLICATION: ${{ vars.APPLICATION }}
   ENVIRONMENT: ${{ vars.ENVIRONMENT }}
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
   ARGOCD_APPLICATIONS_REPO: argocd-application-test
@@ -48,7 +49,7 @@ jobs:
     - name: Docker build/push
       uses: docker/build-push-action@v5
       env:
-        DOCKER_IMAGE: "${{ steps.login-ecr.outputs.registry }}/${{ vars.APPLICATION }}:${{ env.DOCKER_TAG }}"
+        DOCKER_IMAGE: "${{ steps.login-ecr.outputs.registry }}/${{ env.APPLICATION }}:${{ env.DOCKER_TAG }}"
       with:
         context: .
         push: true
@@ -62,7 +63,7 @@ jobs:
         token: ${{ secrets.GHA_RUNNER_POC_CICD_PAT }}
     - name: Update ArgoCD application
       env:
-        ARGOCD_APPLICATION_VALUES_PATH: "applications/overlays/${{ env.ENVIRONMENT }}/${{ vars.APPLICATION }}"
+        ARGOCD_APPLICATION_VALUES_PATH: "applications/overlays/${{ env.ENVIRONMENT }}/${{ env.APPLICATION }}"
       run: |
         cp helm-chart/values.yaml helm-chart/values-${{ env.ENVIRONMENT }}.yaml ${{ env.ARGOCD_APPLICATIONS_REPO }}/${{ env.ARGOCD_APPLICATION_VALUES_PATH }}/
 
@@ -72,5 +73,5 @@ jobs:
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
         git add ${{ env.ARGOCD_APPLICATION_VALUES_PATH }}/
-        git commit -m "${{ vars.APPLICATION }}/${{ env.DOCKER_TAG }} deploy"
+        git commit -m "${{ env.APPLICATION }}/${{ env.DOCKER_TAG }} deploy"
         git push
