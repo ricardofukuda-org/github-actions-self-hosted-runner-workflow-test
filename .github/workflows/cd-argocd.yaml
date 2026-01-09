@@ -62,6 +62,7 @@ jobs:
         path: ${{ env.ARGOCD_APPLICATIONS_REPO }} # Clones to $GITHUB_WORKSPACE/other-repo
         token: ${{ secrets.GHA_RUNNER_POC_CICD_PAT }}
     - name: Update ArgoCD application
+      # Update and commit the docker tag and values*.yaml files into the git repository 'argocd-application-test' resposible to centralize ArgoCD Application's definition and helm chart live synchronization.
       env:
         ARGOCD_APPLICATION_VALUES_PATH: "applications/overlays/${{ env.ENVIRONMENT }}/${{ env.APPLICATION }}"
       run: |
