@@ -17,7 +17,7 @@ on:
 env:
   ENVIRONMENT: ${{ vars.ENVIRONMENT }}
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
-
+  ARGOCD_APPLICATIONS_REPO: argocd-application-test
 jobs:
   deploy:
     runs-on: github-arc-runner-set
@@ -53,24 +53,23 @@ jobs:
         context: .
         push: true
         tags: ${{ env.DOCKER_IMAGE }}
-    - name: Checkout applications repository
+    - name: Checkout application repository
       uses: actions/checkout@v4
       with:
-        repository: ricardofukuda-org/argocd-application-test # Specify the other repo (owner/repo format)
+        repository: ricardofukuda-org/${{ env.ARGOCD_APPLICATIONS_REPO }} # Specify the other repo (owner/repo format)
         ref: main
-        path: argocd-application-test # Clones to $GITHUB_WORKSPACE/other-repo
+        path: ${{ env.ARGOCD_APPLICATIONS_REPO }} # Clones to $GITHUB_WORKSPACE/other-repo
         token: ${{ secrets.GHA_RUNNER_POC_CICD_PAT }}
     - name: setup git config
       run: |
-        APPLICATION_PATH=applications/overlays/${{ env.ENVIRONMENT }}/${{ vars.APPLICATION }}
-        cp helm-chart/values.yaml $APPLICATION_PATH/values.yaml
-        cp helm-chart/values-${{ env.ENVIRONMENT }}.yaml $APPLICATION_PATH/values-${{ env.ENVIRONMENT }}.yaml
+        ARGOCD_APPLICATION_VALUES_PATH=applications/overlays/${{ env.ENVIRONMENT }}/${{ vars.APPLICATION }}
+        cp helm-chart/values.yaml helm-chart/values-${{ env.ENVIRONMENT }}.yaml ${{ env.ARGOCD_APPLICATIONS_REPO }}/$ARGOCD_APPLICATION_VALUES_PATH/
 
-        cd argocd-application-test/
+        sed -i 's/\(tag: [^\n]\+\)/tag: ${{ env.DOCKER_TAG }} # branch: ${{ env.BRANCH_NAME }} commit: ${{ github.sha }}/g' ${{ env.ARGOCD_APPLICATIONS_REPO }}/$ARGOCD_APPLICATION_VALUES_PATH/values-${{ env.ENVIRONMENT }}.yaml
+        
+        cd ${{ env.ARGOCD_APPLICATIONS_REPO }}/
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
-
-        sed -i 's/\(tag: [^\n]\+\)/tag: ${{ env.DOCKER_TAG }} # branch: ${{ env.BRANCH_NAME }} commit: ${{ github.sha }}/g' $APPLICATION_PATH/values-${{ env.ENVIRONMENT }}.yaml
-        git add $APPLICATION_PATH/
+        git add $ARGOCD_APPLICATION_VALUES_PATH/
         git commit -m "${{ vars.APPLICATION }}/${{ env.DOCKER_TAG }} deploy"
         git push
