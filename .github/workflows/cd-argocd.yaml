@@ -46,7 +46,6 @@ jobs:
         repository: ricardofukuda-org/argocd-application-test # Specify the other repo (owner/repo format)
         ref: main
         path: argocd-application-test # Clones to $GITHUB_WORKSPACE/other-repo
-        token: ${{ secrets.PAT }}
     - name: setup git config
       run: |
         cd argocd-application-test/
@@ -56,3 +55,5 @@ jobs:
         git add .
         git commit -m "aaaa"
         git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}
