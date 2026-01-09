@@ -22,7 +22,9 @@ jobs:
       run: |
         BUILD_DATE=$(date -u +"%Y-%m-%dT%H.%M.%SZ")
         echo "BUILD_DATE=$BUILD_DATE" >> $GITHUB_ENV
-        echo "DOCKER_TAG=${{ env.ENVIRONMENT }}-$BUILD_DATE" >> $GITHUB_ENV
+        echo "DOCKER_TAG=$ENVIRONMENT-$BUILD_DATE" >> $GITHUB_ENV
+      env:
+        ENVIRONMENT: ${{ env.ENVIRONMENT }}
       shell: bash
     - name: Checkout sourcecode
       uses: actions/checkout@v4
