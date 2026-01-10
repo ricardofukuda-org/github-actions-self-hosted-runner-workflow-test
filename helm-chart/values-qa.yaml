@@ -1,2 +1,11 @@
+cluster: eks-infra
+env: qa
+
 image:
   tag: undefined
+
+istio:
+  gateway:
+    public:
+      hosts:
+        - website.ricardoxyz.website
