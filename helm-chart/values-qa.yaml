@@ -11,4 +11,4 @@ istio:
         - website.ricardoxyz.website
 
 external_secrets:
-  secret_version: qa-2026-01-11T15.33.44Z
+  secret_version: undefined
