@@ -4,7 +4,7 @@ run-name: Deploy to ${{ inputs.environment }} by @${{ github.actor }}
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
 on:
   workflow_dispatch:
     inputs:
